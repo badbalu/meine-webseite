@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8" />
+    <title>CADPrint Solutions Website</title>
+    <style>
+        body {
+            font-family: "Cooper Black", sans-serif;
+            background-color: aquamarine;
+            margin: 0;
+        }
+
+        /* Fester Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: aquamarine;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+
+        header img {
+            height: 60px;
+            margin-right: 15px;
+        }
+
+        header h1 {
+            color: blue;
+            margin: 0;
+        }
+
+        .cart-btn {
+            background-color: blue;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .cart-btn span {
+            background: red;
+            color: white;
+            border-radius: 50%;
+            padding: 3px 7px;
+            margin-left: 5px;
+            font-size: 12px;
+        }
+
+        /* Abstand unter Header */
+        main {
+            padding-top: 90px;
+            padding-left: 20px;
+            padding-right: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Shop-Stil */
+        .shop {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .product {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            padding: 15px;
+            text-align: center;
+        }
+
+        .product img {
+            max-width: 100%;
+            height: 200px;
+            object-fit: contain;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 10px;
+        }
+
+        .product h3 {
+            margin: 10px 0 5px;
+        }
+
+        .product p {
+            margin: 5px 0;
+        }
+
+        .product button {
+            background-color: blue;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .product button:hover {
+            background-color: darkblue;
+        }
+
+        /* Warenkorb Popup */
+        #cart-popup {
+            display: none;
+            position: fixed;
+            right: 20px;
+            top: 80px;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            width: 300px;
+            z-index: 2000;
+        }
+
+        #cart-popup h3 {
+            margin-top: 0;
+        }
+
+        #cart-popup ul {
+            list-style: none;
+            padding: 0;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        #cart-popup li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+            padding: 5px 0;
+        }
+
+        #cart-popup li button {
+            background: red;
+            color: white;
+            border: none;
+            padding: 3px 6px;
+            font-size: 12px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        #cart-popup .total {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        #cart-popup .clear-btn {
+            margin-top: 10px;
+            background: red;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        /* Cookie Banner */
+        #cookie-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0,0,0,0.85);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 3000;
+            font-size: 14px;
+        }
+
+        #cookie-banner button {
+            background-color: blue;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Kontaktformular */
+        #contact {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 50px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        #contact h2 {
+            margin-top: 0;
+            color: black;
+            font-family: "Franklin Gothic Medium", sans-serif;
+        }
+
+        #contact h3 {
+            margin-top: 0;
+            color: black;
+            font-family: "Franklin Gothic Medium", sans-serif;
+            font-size: 15px;
+            text-align: center;
+        }
+
+        #contact h4 {
+            margin-top: 0;
+            color: black;
+            font-family: "Franklin Gothic Medium", sans-serif;
+            font-size: 15px
+        }
+
+        #contact h5 {
+            margin-top: 0;
+            color: black;
+            font-family: "Franklin Gothic Medium", sans-serif;
+            font-size: 15px;
+        }
+
+        #contact h6 {
+            margin-top: 0;
+            color: black;
+            font-family: "Franklin Gothic Medium" sans-serif;
+            font-size: 15px;
+        }
+
+        #contact form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #contact label {
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+
+        #contact input, #contact textarea {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-family: "Cooper Black", sans-serif;
+            font-size: 14px;
+            resize: vertical;
+        }
+
+        #contact textarea {
+            min-height: 100px;
+        }
+
+        #contact button {
+            margin-top: 15px;
+            background-color: blue;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        #contact button:hover {
+            background-color: darkblue;
+        }
+
+        #form-message {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        #form-message.success {
+            color: green;
+        }
+
+        #form-message.error {
+            color: red;
+        }
+    </style>
+
+    <!-- EmailJS SDK laden und initialisieren -->
+    <script>
+      (function() {
+        window.emailjsReady = false;
+        var s = document.createElement('script');
+        s.src = "https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js";
+        s.async = true;
+        s.onload = function() {
+          emailjs.init("clf9PN6sP9tGcBvaV");
+          window.emailjsReady = true;
+          console.log("EmailJS geladen und initialisiert.");
+        };
+        document.head.appendChild(s);
+      })();
+    </script>
+</head>
+<body>
+
+<header>
+    <div style="display:flex; align-items:center;">
+        <img src="img/MeinNeuesFirmenlogo.png" alt="Logo" />
+        <h1>CADPrint Solutions</h1>
+    </div>
+    <button class="cart-btn" onclick="toggleCart()">
+        Warenkorb <span id="cart-count">0</span>
+    </button>
+</header>
+
+<main>
+    <h2>Ihr kompetenter Partner in Sachen IT, CAD Konstruktion & 3D-Druck</h2>
+    <p>
+        Willkommen bei CADPrint Solutions! Wir bieten Ihnen innovative Lösungen in den Bereichen
+        IT, CAD-Konstruktion und 3D-Druck.
+    </p>
+
+    <h2>Unser Shop</h2>
+    <div class="shop">
+        <!-- Produkt 1 -->
+        <div class="product">
+            <img src="img/IT.jpg" alt="IT - Dienstleistungen" />
+            <h3>IT - Dienstleistungen</h3>
+            <p>Preis: 0.00 € (Auf Anfrage)</p>
+            <button onclick="addToCart('IT - Dienstleistungen', 0)">In den Warenkorb</button>
+        </div>
+
+        <!-- Produkt 2 -->
+        <div class="product">
+            <img src="img/siemens-solid-edge-logo-247-154.png" alt="SE - Logo" />
+            <h3>CAD-Konstruktionsservice</h3>
+            <p>Preis: 0.00 € (Auf Anfrage)</p>
+            <button onclick="addToCart('CAD-Konstruktionsservice', 0)">In den Warenkorb</button>
+        </div>
+
+        <!-- Produkt 3 -->
+        <div class="product">
+            <img src="img/3d%20Drucker.jpg" alt="3D-Drucker" />
+            <h3>3D-Druck Service</h3>
+            <p>Preis: 0.00 € (Auf Anfrage)</p>
+            <button onclick="addToCart('3D-Druck Service', 0)">In den Warenkorb</button>
+        </div>
+    </div>
+
+    <!-- Kontaktformular -->
+    <section id="contact">
+        <h2>Kontaktieren Sie uns</h2>
+        <h3>(Bitte tragen sie Ihre E - Mail, Ihren Namen, Ihre Telefonnummer usw. auch in das Nachrichtenfeld ein, damit wir Sie Kontaktieren können, um Ihre Fragen oder ähnliches zu Beantworten.)</h3>
+        <h4>Vielen Dank!</h4>
+        <h5>Mit Freundlichen Grüßen</h5>
+        <h6>Ihr CADPrintSolutions Team</h6>
+        <form id="contact-form" onsubmit="return sendMessage(event)">
+            <label for="name">Name *</label>
+            <input type="text" id="name" name="name" required />
+
+            <label for="email">E-Mail *</label>
+            <input type="email" id="email" name="email" required />
+
+            <label for="message">Nachricht *</label>
+            <textarea id="message" name="message" required></textarea>
+
+            <button type="submit">Absenden</button>
+            <div id="form-message"></div>
+        </form>
+    </section>
+</main>
+
+<!-- Warenkorb Popup -->
+<div id="cart-popup">
+    <h3>Warenkorb</h3>
+    <ul id="cart-items"></ul>
+    <div class="total"></div>
+    <button class="clear-btn" onclick="clearCart()">Warenkorb leeren</button>
+</div>
+
+<!-- Cookie Banner -->
+<div id="cookie-banner">
+    Diese Website verwendet Cookies, um sicherzustellen, dass Sie die beste Erfahrung auf unserer Website erhalten.
+    <button onclick="acceptCookies()">Akzeptieren</button>
+</div>
+
+<script>
+    // Cookie Banner
+    window.acceptCookies = function() {
+        document.getElementById('cookie-banner').style.display = 'none';
+        localStorage.setItem('cookiesAccepted', 'true');
+    }
+
+    window.onload = () => {
+        if (localStorage.getItem('cookiesAccepted') === 'true') {
+            document.getElementById('cookie-banner').style.display = 'none';
+        }
+        loadCart();
+    };
+
+    // Warenkorb-Funktionen
+    let cart = [];
+
+    function addToCart(name, price) {
+        cart.push({ name, price });
+        updateCartCount();
+        saveCart();
+    }
+
+    function updateCartCount() {
+        document.getElementById('cart-count').textContent = cart.length;
+    }
+
+    function toggleCart() {
+        const popup = document.getElementById('cart-popup');
+        if (popup.style.display === 'block') {
+            popup.style.display = 'none';
+        } else {
+            renderCart();
+            popup.style.display = 'block';
+        }
+    }
+
+    function renderCart() {
+        const cartItems = document.getElementById('cart-items');
+        cartItems.innerHTML = '';
+        let total = 0;
+        cart.forEach((item, index) => {
+            const li = document.createElement('li');
+            li.textContent = `${item.name} - ${item.price.toFixed(2)} €`;
+
+            const removeBtn = document.createElement('button');
+            removeBtn.textContent = 'x';
+            removeBtn.onclick = () => {
+                cart.splice(index, 1);
+                renderCart();
+                updateCartCount();
+                saveCart();
+            };
+
+            li.appendChild(removeBtn);
+            cartItems.appendChild(li);
+
+            total += item.price;
+        });
+        document.querySelector('#cart-popup .total').textContent = `Gesamt: ${total.toFixed(2)} €`;
+    }
+
+    function clearCart() {
+        cart = [];
+        renderCart();
+        updateCartCount();
+        saveCart();
+    }
+
+    function saveCart() {
+        localStorage.setItem('cart', JSON.stringify(cart));
+    }
+
+    function loadCart() {
+        const savedCart = localStorage.getItem('cart');
+        if (savedCart) {
+            cart = JSON.parse(savedCart);
+            updateCartCount();
+        }
+    }
+
+    // EmailJS Senden
+    function sendMessage(event) {
+        event.preventDefault();
+
+        if (!window.emailjsReady) {
+            alert("E-Mail-Dienst ist noch nicht bereit, bitte versuchen Sie es gleich noch einmal.");
+            return false;
+        }
+
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const message = document.getElementById('message').value.trim();
+        const formMessage = document.getElementById('form-message');
+
+        if (!name || !email || !message) {
+            formMessage.textContent = 'Bitte füllen Sie alle Pflichtfelder aus.';
+            formMessage.className = 'error';
+            return false;
+        }
+
+        emailjs.send('service_r966wq9', 'template_1uzppn8', {
+            user_name: name,
+            user_email: email,
+            message: message
+        }).then(function () {
+            formMessage.textContent = 'Vielen Dank für Ihre Nachricht! Wir melden uns bald bei Ihnen.';
+            formMessage.className = 'success';
+            document.getElementById('contact-form').reset();
+        }, function (error) {
+            formMessage.textContent = 'Fehler beim Senden: ' + JSON.stringify(error);
+            formMessage.className = 'error';
+        });
+
+        return false;
+    }
+</script>
+
+</body>
+</html>
